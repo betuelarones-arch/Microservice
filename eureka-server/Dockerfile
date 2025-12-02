@@ -1,18 +1,19 @@
 # ---------- BUILD STAGE ----------
-FROM eclipse-temurin:21-jdk-jammy AS build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Instalamos Maven
-RUN apt-get update && apt-get install -y maven
+# Copy POM and download dependencies
+COPY pom.xml .
+RUN mvn -B dependency:go-offline
 
-# Copiamos TODO el proyecto
-COPY . .
+# Copy source code
+COPY src ./src
 
-# Construimos el JAR
+# Build the JAR
 RUN mvn -q package -DskipTests
 
 # ---------- RUNTIME STAGE ----------
-FROM eclipse-temurin:21-jdk-jammy
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
