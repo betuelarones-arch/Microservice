@@ -1,62 +1,28 @@
 services:
-  # Eureka Server
   - type: web
     name: eureka-server
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    dockerfile: eureka-server/Dockerfile
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
+    env: docker
     plan: free
-    numInstances: 1
-    healthCheckPath: /
+    dockerfilePath: ./eureka-server/Dockerfile
     autoDeploy: true
 
-  # API Gateway
   - type: web
     name: api-gateway
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    dockerfile: api-gateway/Dockerfile
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
-      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-        value: ${EUREKA_SERVER_URL}
+    env: docker
     plan: free
-    numInstances: 1
-    healthCheckPath: /actuator/health
+    dockerfilePath: ./api-gateway/Dockerfile
     autoDeploy: true
 
-  # Categoria Service
   - type: web
     name: categoria-service
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    dockerfile: categoria-service/Dockerfile
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
-      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-        value: ${EUREKA_SERVER_URL}
+    env: docker
     plan: free
-    numInstances: 1
-    healthCheckPath: /actuator/health
+    dockerfilePath: ./categoria-service/Dockerfile
     autoDeploy: true
 
-  # Producto Service
   - type: web
     name: producto-service
-    env: java
-    buildCommand: ./mvnw clean package -DskipTests
-    dockerfile: producto-service/Dockerfile
-    envVars:
-      - key: SPRING_PROFILES_ACTIVE
-        value: prod
-      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
-        value: ${EUREKA_SERVER_URL}
+    env: docker
     plan: free
-    numInstances: 1
-    healthCheckPath: /actuator/health
+    dockerfilePath: ./producto-service/Dockerfile
     autoDeploy: true
