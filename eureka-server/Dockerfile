@@ -1,14 +1,12 @@
-# Use a base image with Java 21
-FROM eclipse-temurin:21-jdk-jammy
-
-# Set working directory
+# ---------- BUILD STAGE ----------
+FROM eclipse-temurin:21-jdk-jammy AS build
 WORKDIR /app
+COPY . .
+RUN ./mvnw -q package -DskipTests
 
-# Copy the JAR file into the container
-COPY target/eureka-server-0.0.1-SNAPSHOT.jar app.jar
-
-# Expose the port the app runs on
+# ---------- RUNTIME STAGE ----------
+FROM eclipse-temurin:21-jdk-jammy
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8761
-
-# Command to run the application
 ENTRYPOINT ["java", "-jar", "app.jar"]
