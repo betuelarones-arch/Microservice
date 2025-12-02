@@ -1,0 +1,62 @@
+services:
+  # Eureka Server
+  - type: web
+    name: eureka-server
+    env: java
+    build:
+      dockerfile: eureka-server/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+    plan: free
+    numInstances: 1
+    healthCheckPath: /
+    autoDeploy: true
+
+  # API Gateway
+  - type: web
+    name: api-gateway
+    env: java
+    build:
+      dockerfile: api-gateway/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: ${EUREKA_SERVER_URL}
+    plan: free
+    numInstances: 1
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+
+  # Categoria Service
+  - type: web
+    name: categoria-service
+    env: java
+    build:
+      dockerfile: categoria-service/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: ${EUREKA_SERVER_URL}
+    plan: free
+    numInstances: 1
+    healthCheckPath: /actuator/health
+    autoDeploy: true
+
+  # Producto Service
+  - type: web
+    name: producto-service
+    env: java
+    build:
+      dockerfile: producto-service/Dockerfile
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+        value: ${EUREKA_SERVER_URL}
+    plan: free
+    numInstances: 1
+    healthCheckPath: /actuator/health
+    autoDeploy: true
